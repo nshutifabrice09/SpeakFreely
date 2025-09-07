@@ -6,7 +6,7 @@ const ReplyModel = require("./models").Reply;
 
 module.exports = function (app) {
   
-  app.route("/api/threads/:board").post((req, res) =>{
+  app.route("/api/threads/:board").post(async (req, res) => {
     const { text, delete_password } = req.body;
     let board = req.body.board;
     if (!board) {
@@ -19,9 +19,10 @@ module.exports = function (app) {
       replies: [],
     });
     console.log("newThread", newThread);
-    BoardModel.findOne({ name: board }, (err, Boarddata) => {
+
+   let Boarddata = await BoardModel.findOne({ name: board });
       if (!Boarddata) {
-        const newBoard = new BoardModel( {
+        const newBoard = new BoardModel({
           name: board,
           threads: [],
         });
@@ -48,7 +49,7 @@ module.exports = function (app) {
         });
       }
     });
-  });
+  
     
   app.route('/api/replies/:board');
 
