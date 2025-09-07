@@ -29,5 +29,5 @@ const BoardSchema = new Schema ({
 const Board = mongoose.model("Board", BoardSchema);
 
 exports.Board = Board;
-exports.thread = Thread;
+exports.Thread = Thread;
 exports.Reply = Reply;
