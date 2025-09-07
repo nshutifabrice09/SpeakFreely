@@ -3,6 +3,7 @@ require('dotenv').config();
 const express     = require('express');
 const bodyParser  = require('body-parser');
 const cors        = require('cors');
+const connectDB   = require('./db-connection.js')
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -10,6 +11,16 @@ const runner            = require('./test-runner');
 require("./db-connection.js");
 
 const app = express();
+
+app.use(express.json());
+
+connectDB().then(() => {
+  // only require routes AFTER DB is connected
+  require('./routes/api.js')(app);
+
+  const PORT = process.env.PORT || 3002;
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+});
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
