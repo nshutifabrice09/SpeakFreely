@@ -47,9 +47,12 @@ module.exports = function (app) {
             res.json(newThread);
           }
         });
+        
       }
+    })
+    .get((req, res) => {
+      const board = req.params.board;
     });
-  
     
   app.route('/api/replies/:board');
 
