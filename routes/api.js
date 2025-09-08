@@ -155,7 +155,27 @@ module.exports = function (app) {
         const thread = data.thread.id(req.query.thread_id);
         res.json(thread);
       }
-    })
+    });
+  }).put((req, res) => {
+    const { thread_id, reply_id } = req.body;
+    const board = req.params.body;
+    let BoardModel = BoardModel.findOne({ name: board}, (error, data) => {
+      if(!data) {
+        console.log("No board with this name");
+        res.json({ error: "No board with this name"});
+      } else {
+        console.log("data", data);
+        let thread = data.threads.id(thread_id);
+        let reply = data.replies.id(reply_id);
+        reply.reported = true;
+        reply.bumped_on = new Date();
+        data.save((error, updateData) => {
+          if (!error) {
+            res.send("Success!");
+          }
+        });
+      }
+    });
   })
-
+  
 };
