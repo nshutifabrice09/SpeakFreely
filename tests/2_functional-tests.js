@@ -93,7 +93,7 @@ suite("Functional Tests", function () {
                     done();
                 });
         });
-        test("// Viewing a single thread with all replies: GET request to /api/replies/{board}", function (done) {
+        test("Viewing a single thread with all replies: GET request to /api/replies/{board}", function (done) {
             chai
                 .request(server)
                 .get("/api/replies/test-board")
@@ -111,7 +111,7 @@ suite("Functional Tests", function () {
                 });
         });
         // Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password
-        test("// Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password", function (done) {
+        test("Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password", function (done) {
             console.log(
                 "delete reply invalid ids: thread_id" +
                 testThread_id + " reply_id: " + testReply_id
@@ -132,8 +132,21 @@ suite("Functional Tests", function () {
                 });
         });
         // Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password
-        test("// Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password", function (done) {
-
+        test("Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password", function (done) {
+            chai
+                .request(server)
+                .delete("/api/replies/test-board")
+                .set("content-type", 'application/json')
+                .send({
+                    thread_id: testThread_id,
+                    reply_id: testReply_id,
+                    delete_password: "testreply",
+                })
+                .end(function (err, res) {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text, "Success");
+                })
+                done();
         });
         //Reporting a reply: PUT request to /api/replies/{board}
         test("Reporting a reply: PUT request to /api/replies/{board}", function (done) {
