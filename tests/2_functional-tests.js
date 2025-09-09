@@ -97,7 +97,21 @@ suite("Functional Tests", function () {
             chai
                 .request(server)
                 .get("/api/replies/test-board")
-        })
+                .set("content-type", "application/json")
+                .query ({
+                    thread_id: testThread_id,
+                })
+                .end(function (err, res) {
+                    assert.equal(res.status, 200);
+                    console.log("test get whole thread body", res.body);
+                    assert.equal(res.body._id, testThread_id);
+                    assert.equal(res.body.text, "test text");
+                    assert.equal(res.body.replies[0].text, "test reply");
+                    done();
+                });
+        });
+        // Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password
+        
     });
 })
 
