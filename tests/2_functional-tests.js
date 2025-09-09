@@ -111,7 +111,26 @@ suite("Functional Tests", function () {
                 });
         });
         // Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password
-        
+        test("// Deleting a reply with the incorrect password: DELETE request to /api/replies/{board} with an invalid delete_password", function (done) {
+            console.log(
+                "delete reply invalid ids: thread_id" +
+                testThread_id + " reply_id: " + testReply_id
+            );
+            chai
+                .request(server)
+                .delete("/api/replies/test-board")
+                .set("content-type", "applicaiton/json")
+                .send({
+                    thread_id: testThread_id,
+                    reply_id: testReply_id,
+                    delete_password: "Incorrect",
+                })
+                .end(function (err, res) {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text,  "Incorrect Password");
+                    done();
+                });
+        })
     });
 })
 
