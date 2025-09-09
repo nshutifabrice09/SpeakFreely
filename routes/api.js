@@ -177,5 +177,29 @@ module.exports = function (app) {
       }
     });
   })
-  
+    .delete((req, res) => {
+      const { thread_id, reply_id } = req.body;
+    const board = req.params.body;
+    let BoardModel = BoardModel.findOne({ name: board}, (error, data) => {
+      if(!data) {
+        console.log("No board with this name");
+        res.json({ error: "No board with this name"});
+      } else {
+        console.log("data", data);
+        let thread = data.threads.id(thread_id);
+        let reply = data.replies.id(reply_id);
+        if( reply.delete_password === delete_password) {
+          reply.remove();
+        }else {
+          res.send("Incorrect Password!");
+          return;
+        }
+        data.save((error, updateData) => {
+          if(!error) {
+            res.send("Success!");
+          }
+        });
+      }
+    });
+  });
 };
