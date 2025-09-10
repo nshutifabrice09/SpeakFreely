@@ -20,8 +20,6 @@ suite('Functional Tests', function() {
 suite("Functional Tests", function () {
     suite("10 functional tests", function (){
         // Creating a new thread: POST request to /api/threads/{board}
-        // Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
-        // Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password
         test("Creating a new thread: POST request to /api/threads/{board}", function (done) {
             chai
                 .request(server)
@@ -37,6 +35,7 @@ suite("Functional Tests", function () {
                     done();
                 });
         });
+        // Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}
         test("Viewing the 10 most recent thread with 3 replies each: GET request to /api/threads/{board}", function (done) {
             chai
                 .request(server)
@@ -48,6 +47,7 @@ suite("Functional Tests", function () {
                     done();
                 });
         });
+        // Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password
         test("Delete a thread with the incorrect password: DELETE request tp /api/threads/{board} with an invalid delete_password", function (done) {
             chai
                 .request(server)
@@ -61,7 +61,6 @@ suite("Functional Tests", function () {
                 });
         });
         // Reporting a thread: PUT request to /api/threads/{board}
-        // Creating a new reply: POST request to /api/replies/{board}
         test("Reporting a thread: PUT request to /api/threads/{board}", function (done) {
             console.log("testThread_id", testThread_id);
             chai
@@ -75,12 +74,13 @@ suite("Functional Tests", function () {
                     done();
                 });
         });
+        // Creating a new reply: POST request to /api/replies/{board}
         test("Creating a new reply: POST request to /api/replies/{board}", function (done) {
             chai
                 .request(server)
                 .post("/api/threads/test-board")
                 .set("content-type", "application/json")
-                .send({ text: "test text", delete_password: "test"})
+                // .send({ text: "test text", delete_password: "test"})
                 .end({ 
                     thread_id: testThread_id,
                     text: "test reply",
@@ -93,6 +93,7 @@ suite("Functional Tests", function () {
                     done();
                 });
         });
+        // Viewing a single thread with all replies: GET request to /api/replies/{board}
         test("Viewing a single thread with all replies: GET request to /api/replies/{board}", function (done) {
             chai
                 .request(server)
@@ -147,6 +148,23 @@ suite("Functional Tests", function () {
                     assert.equal(res.text, "Success");
                 })
                 done();
+            });
+        });
+        // Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password
+        test("Deleting a reply with the correct password: DELETE request to /api/replies/{board} with a valid delete_password", function (done) {
+            chai 
+                .request(server)
+                .delete("/api/replies/test-board")
+                .set("content-type", "application/json")
+                .send({ 
+                    thread_id: testThread_id, 
+                    reply_id: testReply_id,
+                    delete_password: "test reply" })
+                .end(function (err, res) {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.text, "Success");
+                    done();
+                });
         });
         //Reporting a reply: PUT request to /api/replies/{board}
         test("Reporting a reply: PUT request to /api/replies/{board}", function (done) {
@@ -165,6 +183,4 @@ suite("Functional Tests", function () {
                 });
         });
     });
-})
-
 });

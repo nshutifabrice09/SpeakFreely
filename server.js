@@ -23,10 +23,16 @@ connectDB().then(() => {
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 });
 
-app.use(helmet.frameguard());
+app.use(helmet());
 app.use(
-  helmet({
-    referrerPolicy: { policy: "same-origin",}
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "script-src": ["'self'"],
+      "style-src": ["'self'"],
+      "img-src": ["'self'"],
+      "font-src": ["'self'"],
+    },
   })
 );
 app.use(helmet.dnsPrefetchControl);
