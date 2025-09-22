@@ -30,7 +30,7 @@ module.exports = function (app) {
         });
         console.log("newBoard", newBoard);
         newBoard.threads.push(newThread);
-        newBoard.save(( error, data) => {
+        newBoard.save(( err, data) => {
           console.log("newBoardData", data);
           if (error || !data) {
             console.log(error);
